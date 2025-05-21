@@ -1,0 +1,661 @@
+<!-- Modal de Ver Detalles de Equipo -->
+    <div id="modal-detalles" class="modal">
+        <div class="modal-content">
+            <header class="modal-header">
+                <h2>Detalles del Equipo</h2>
+                <button class="btn-close detalles-close">&times;</button>
+            </header>
+            <div class="modal-body">
+                <div id="detalles-equipo" class="detalles-container">
+                    <!-- Contenido cargado dinámicamente -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary detalles-close">Cerrar</button>
+                <button id="btn-print-detalles" class="btn-primary"><i class="fas fa-print"></i> Imprimir</button>
+            </div>
+        </div>
+    </div><!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sistema de gestión para servicio técnico de computadores, consolas y dispositivos electrónicos">
+    <meta name="keywords" content="servicio técnico, reparación computadores, mantenimiento, soporte técnico">
+    <title>TechService - Sistema de Gestión de Servicio Técnico</title>
+    <link rel="stylesheet" href="stylesheet.css">
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <!-- Fuente Open Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Encabezado principal -->
+    <header class="main-header">
+        <div class="container">
+            <h1>Sistema de Gestión de Servicio Técnico</h1>
+            <p>Gestión eficiente de equipos y clientes</p>
+        </div>
+    </header>
+
+    <!-- Navegación principal -->
+    <nav class="main-nav">
+        <div class="container">
+            <ul class="nav-list">
+                <li><button id="btn-recepcion" class="nav-btn active" data-tab="recepcion">Recepción</button></li>
+                <li><button id="btn-seguimiento" class="nav-btn" data-tab="seguimiento">Seguimiento</button></li>
+                <li><button id="btn-entrega" class="nav-btn" data-tab="entrega">Entrega</button></li>
+                <li><button id="btn-clientes" class="nav-btn" data-tab="clientes">Clientes</button></li>
+                <li><button id="btn-reportes" class="nav-btn" data-tab="reportes">Reportes</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Barra de herramientas -->
+    <section class="toolbar">
+        <div class="container">
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Buscar por cliente, serial o estado...">
+                <button id="btn-search"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="toolbar-actions">
+                <button id="btn-reset" class="btn-danger">
+                    <i class="fas fa-trash"></i> Resetear Sistema
+                </button>
+                <button id="btn-new-equipo" class="btn-primary">
+                    <i class="fas fa-plus"></i> Nuevo Equipo
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contenido principal -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Vista de recepción -->
+            <section id="tab-recepcion" class="tab-content active">
+                <div class="card">
+                    <header class="card-header">
+                        <h2>Recepción de Equipos</h2>
+                    </header>
+                    <div class="card-body">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Fecha</th>
+                                    <th>Cliente</th>
+                                    <th>Equipo</th>
+                                    <th>Problema</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recepcion-table-body">
+                                <!-- Contenido dinámico -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Vista de seguimiento -->
+            <section id="tab-seguimiento" class="tab-content">
+                <div class="card">
+                    <header class="card-header">
+                        <h2>Seguimiento de Equipos</h2>
+                    </header>
+                    <div class="card-body">
+                        <div class="kanban-board">
+                            <div class="kanban-column">
+                                <h3>Recibido <span id="count-recibido" class="count-badge">0</span></h3>
+                                <div id="kanban-recibido" class="kanban-items">
+                                    <!-- Contenido dinámico -->
+                                </div>
+                            </div>
+                            <div class="kanban-column">
+                                <h3>En revisión <span id="count-revision" class="count-badge">0</span></h3>
+                                <div id="kanban-revision" class="kanban-items">
+                                    <!-- Contenido dinámico -->
+                                </div>
+                            </div>
+                            <div class="kanban-column">
+                                <h3>En reparación <span id="count-reparacion" class="count-badge">0</span></h3>
+                                <div id="kanban-reparacion" class="kanban-items">
+                                    <!-- Contenido dinámico -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Vista de entrega -->
+            <section id="tab-entrega" class="tab-content">
+                <div class="card">
+                    <header class="card-header">
+                        <h2>Entrega de Equipos</h2>
+                    </header>
+                    <div class="card-body">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Cliente</th>
+                                    <th>Equipo</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="entrega-table-body">
+                                <!-- Contenido dinámico -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Vista de clientes -->
+            <section id="tab-clientes" class="tab-content">
+                <div class="card">
+                    <header class="card-header">
+                        <h2>Gestión de Clientes</h2>
+                    </header>
+                    <div class="card-body">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Teléfono</th>
+                                    <th>Email</th>
+                                    <th>Dirección</th>
+                                    <th>Equipos</th>
+                                </tr>
+                            </thead>
+                            <tbody id="clientes-table-body">
+                                <!-- Contenido dinámico -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Vista de reportes -->
+            <section id="tab-reportes" class="tab-content">
+                <div class="report-grid">
+                    <div class="card">
+                        <header class="card-header">
+                            <h2>Resumen de Estado</h2>
+                        </header>
+                        <div class="card-body">
+                            <ul class="stats-list" id="estados-stats">
+                                <!-- Contenido dinámico -->
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <header class="card-header">
+                            <h2>Tipos de Equipos</h2>
+                        </header>
+                        <div class="card-body">
+                            <ul class="stats-list" id="tipos-stats">
+                                <!-- Contenido dinámico -->
+                            </ul>
+                            <div id="chart-container" class="chart-container">
+                                <!-- Gráfico se generará con JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Modales -->
+    <!-- Modal de Formulario de Equipo -->
+    <div id="modal-equipo" class="modal">
+        <div class="modal-content">
+            <header class="modal-header">
+                <h2 id="modal-title">Registrar Nuevo Equipo</h2>
+                <button id="btn-close-modal" class="btn-close">&times;</button>
+            </header>
+            <div class="modal-body">
+                <form id="equipo-form">
+                    <input type="hidden" id="equipo-id" name="id">
+                    
+                    <!-- Navegación por pestañas dentro del formulario -->
+                    <div class="form-tabs">
+                        <button type="button" class="form-tab-btn active" data-tab="cliente">Cliente</button>
+                        <button type="button" class="form-tab-btn" data-tab="equipo">Equipo</button>
+                        <button type="button" class="form-tab-btn" data-tab="componentes">Componentes</button>
+                        <button type="button" class="form-tab-btn" data-tab="verificaciones">Verificaciones</button>
+                        <button type="button" class="form-tab-btn" data-tab="servicios">Servicios</button>
+                        <button type="button" class="form-tab-btn" data-tab="pagos">Pagos</button>
+                        <button type="button" class="form-tab-btn" data-tab="fotos">Fotos</button>
+                    </div>
+                    
+                    <!-- Pestaña: Datos del cliente -->
+                    <div id="tab-cliente" class="form-tab-content active">
+                        <div class="form-section">
+                            <h3>Datos del Cliente</h3>
+                            
+                            <div class="form-row">
+                                <div class="form-search-group">
+                                    <label for="celular">Celular</label>
+                                    <div class="input-with-button">
+                                        <input type="text" id="celular" name="celular" required>
+                                        <button type="button" id="btn-buscar-cliente" class="icon-button">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="nombreCliente">Nombre Completo</label>
+                                    <input type="text" id="nombreCliente" name="nombreCliente" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row two-cols">
+                                <div class="form-group">
+                                    <label for="tipoIdentificacion">Tipo de Identificación</label>
+                                    <select id="tipoIdentificacion" name="tipoIdentificacion">
+                                        <option value="CC">Cédula de Ciudadanía</option>
+                                        <option value="CE">Cédula de Extranjería</option>
+                                        <option value="TI">Tarjeta de Identidad</option>
+                                        <option value="NIT">NIT</option>
+                                        <option value="Pasaporte">Pasaporte</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="numeroIdentificacion">Número de Identificación</label>
+                                    <input type="text" id="numeroIdentificacion" name="numeroIdentificacion">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" id="email" name="email">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="direccion">Dirección</label>
+                                    <input type="text" id="direccion" name="direccion">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pestaña: Datos del equipo -->
+                    <div id="tab-equipo" class="form-tab-content">
+                        <div class="form-section">
+                            <h3>Datos del Equipo</h3>
+                            
+                            <div class="form-row two-cols">
+                                <div class="form-group">
+                                    <label for="fecha">Fecha de Ingreso</label>
+                                    <input type="date" id="fecha" name="fecha" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="hora">Hora de Ingreso</label>
+                                    <input type="time" id="hora" name="hora">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="tipoEquipo">Tipo de Equipo</label>
+                                    <select id="tipoEquipo" name="tipoEquipo" required>
+                                        <option value="Portátil">Portátil</option>
+                                        <option value="Torre">Torre</option>
+                                        <option value="Consola">Consola</option>
+                                        <option value="Tablet">Tablet</option>
+                                        <option value="All-in-One">All-in-One</option>
+                                        <option value="Impresora">Impresora</option>
+                                        <option value="Otro">Otro</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row two-cols">
+                                <div class="form-group">
+                                    <label for="marca">Marca</label>
+                                    <input type="text" id="marca" name="marca" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="modelo">Modelo</label>
+                                    <input type="text" id="modelo" name="modelo" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="serial">Número de Serie</label>
+                                    <input type="text" id="serial" name="serial" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="contrasena">Contraseña del dispositivo (si aplica)</label>
+                                    <input type="text" id="contrasena" name="contrasena">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3>Accesorios Entregados</h3>
+                            
+                            <div class="form-row checkbox-group">
+                                <div class="form-check">
+                                    <input type="checkbox" id="entregaCargador" name="entregaCargador">
+                                    <label for="entregaCargador">Entrega cargador</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" id="entregaForro" name="entregaForro">
+                                    <label for="entregaForro">Entrega forro/estuche</label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="otrosAccesorios">Otros accesorios entregados</label>
+                                    <input type="text" id="otrosAccesorios" name="otrosAccesorios">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pestaña: Componentes -->
+                    <div id="tab-componentes" class="form-tab-content">
+                        <div class="form-section">
+                            <h3>Componentes del Equipo</h3>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="procesador">Procesador</label>
+                                    <input type="text" id="procesador" name="procesador" placeholder="Ej: Intel Core i5 10400">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="tarjetaGrafica">Tarjeta Gráfica</label>
+                                    <input type="text" id="tarjetaGrafica" name="tarjetaGrafica" placeholder="Ej: NVIDIA GeForce GTX 1650">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="memoriaRam">Memoria RAM</label>
+                                    <input type="text" id="memoriaRam" name="memoriaRam" placeholder="Ej: 8GB DDR4">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="almacenamiento">Almacenamiento</label>
+                                    <input type="text" id="almacenamiento" name="almacenamiento" placeholder="Ej: SSD 256GB + HDD 1TB">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pestaña: Verificaciones -->
+                    <div id="tab-verificaciones" class="form-tab-content">
+                        <div class="form-section">
+                            <h3>Verificaciones del Equipo</h3>
+                            
+                            <div class="form-row checkbox-group">
+                                <div class="form-check">
+                                    <input type="checkbox" id="verificacionPuertosUsb" name="verificacionPuertosUsb">
+                                    <label for="verificacionPuertosUsb">Puertos USB funcionando</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" id="verificacionCamara" name="verificacionCamara">
+                                    <label for="verificacionCamara">Cámara funcionando</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" id="verificacionMicrofono" name="verificacionMicrofono">
+                                    <label for="verificacionMicrofono">Micrófono funcionando</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" id="verificacionSistemaOperativo" name="verificacionSistemaOperativo">
+                                    <label for="verificacionSistemaOperativo">Sistema operativo funcionando correctamente</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3>Problema y Observaciones</h3>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="problema">Problema Reportado</label>
+                                    <textarea id="problema" name="problema" rows="3" required></textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="observaciones">Observaciones</label>
+                                    <textarea id="observaciones" name="observaciones" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pestaña: Servicios -->
+                    <div id="tab-servicios" class="form-tab-content">
+                        <div class="form-section">
+                            <h3>Servicios a Realizar</h3>
+                            
+                            <div class="form-row checkbox-group">
+                                <div class="form-check">
+                                    <input type="checkbox" id="requiereFormateo" name="requiereFormateo">
+                                    <label for="requiereFormateo">Requiere formateo</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" id="requiereClonacion" name="requiereClonacion">
+                                    <label for="requiereClonacion">Requiere clonación de disco</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" id="requiereCopiaSeguridad" name="requiereCopiaSeguridad">
+                                    <label for="requiereCopiaSeguridad">Requiere copia de seguridad</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" id="requiereTermalpads" name="requiereTermalpads">
+                                    <label for="requiereTermalpads">Requiere cambio de termalpads</label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="serviciosAdicionales">Servicios adicionales</label>
+                                    <textarea id="serviciosAdicionales" name="serviciosAdicionales" rows="2"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3>Asignación</h3>
+                            
+                            <div id="estado-section" class="form-row two-cols">
+                                <div class="form-group">
+                                    <label for="estado">Estado</label>
+                                    <select id="estado" name="estado">
+                                        <option value="Recibido">Recibido</option>
+                                        <option value="En revisión">En revisión</option>
+                                        <option value="En reparación">En reparación</option>
+                                        <option value="Listo para entrega">Listo para entrega</option>
+                                        <option value="Entregado">Entregado</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="tecnico">Técnico Asignado</label>
+                                    <input type="text" id="tecnico" name="tecnico">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pestaña: Pagos -->
+                    <div id="tab-pagos" class="form-tab-content">
+                        <div class="form-section">
+                            <h3>Información de Abono</h3>
+                            
+                            <div class="form-row">
+                                <div class="form-check">
+                                    <input type="checkbox" id="realizoAbono" name="realizoAbono">
+                                    <label for="realizoAbono">Realizó abono para agendar</label>
+                                </div>
+                            </div>
+                            
+                            <div id="detalles-abono" class="form-abono-details">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="metodoPagoAbono">Método de pago del abono</label>
+                                        <select id="metodoPagoAbono" name="metodoPagoAbono">
+                                            <option value="">Seleccionar</option>
+                                            <option value="Efectivo">Efectivo</option>
+                                            <option value="Tarjeta">Tarjeta débito/crédito</option>
+                                            <option value="Transferencia">Transferencia bancaria</option>
+                                            <option value="Nequi">Nequi</option>
+                                            <option value="Daviplata">Daviplata</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row two-cols">
+                                    <div class="form-group">
+                                        <label for="fechaAbono">Fecha del abono</label>
+                                        <input type="date" id="fechaAbono" name="fechaAbono">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="valorAbono">Valor del abono</label>
+                                        <input type="number" id="valorAbono" name="valorAbono" placeholder="0">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pestaña: Fotos -->
+                    <div id="tab-fotos" class="form-tab-content">
+                        <div class="form-section">
+                            <h3>Fotografías del Equipo</h3>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="fotoEntrada">Fotografía de entrada</label>
+                                    <div class="file-upload">
+                                        <input type="file" id="fotoEntrada" name="fotoEntrada" accept="image/*" class="file-input">
+                                        <label for="fotoEntrada" class="file-label">
+                                            <i class="fas fa-camera"></i> Capturar o seleccionar foto
+                                        </label>
+                                        <div id="preview-fotoEntrada" class="image-preview"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="fotoSalida">Fotografía de salida</label>
+                                    <div class="file-upload">
+                                        <input type="file" id="fotoSalida" name="fotoSalida" accept="image/*" class="file-input">
+                                        <label for="fotoSalida" class="file-label">
+                                            <i class="fas fa-camera"></i> Capturar o seleccionar foto
+                                        </label>
+                                        <div id="preview-fotoSalida" class="image-preview"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Botones de navegación y acción -->
+                    <div class="form-navigation">
+                        <button type="button" id="btn-prev-tab" class="btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Anterior
+                        </button>
+                        <button type="button" id="btn-next-tab" class="btn-secondary">
+                            Siguiente <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" id="btn-cancel" class="btn-secondary">Cancelar</button>
+                        <button type="submit" id="btn-save" class="btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación -->
+    <div id="modal-confirm" class="modal">
+        <div class="modal-content modal-sm">
+            <header class="modal-header">
+                <h2>Confirmar acción</h2>
+                <button class="btn-close confirm-close">&times;</button>
+            </header>
+            <div class="modal-body">
+                <p id="confirm-message">¿Estás seguro de que quieres realizar esta acción?</p>
+                <div class="form-actions">
+                    <button class="btn-secondary confirm-close">Cancelar</button>
+                    <button id="btn-confirm-action" class="btn-danger">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de impresión -->
+    <div id="modal-print" class="modal">
+        <div class="modal-content modal-md">
+            <header class="modal-header">
+                <h2>Comprobante de Servicio</h2>
+                <button class="btn-close print-close">&times;</button>
+            </header>
+            <div class="modal-body" id="print-content">
+                <div class="print-header">
+                    <h1>TechService</h1>
+                    <p>Sistema de Gestión de Servicio Técnico</p>
+                    <p>Bogotá, Colombia</p>
+                </div>
+                <div class="print-section">
+                    <h3>Comprobante de Recepción</h3>
+                    <div id="print-data">
+                        <!-- Contenido dinámico -->
+                    </div>
+                </div>
+                <div class="print-footer">
+                    <p>¡Gracias por confiar en nuestro servicio!</p>
+                    <p>Este comprobante es necesario para retirar el equipo.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary print-close">Cerrar</button>
+                <button id="btn-print" class="btn-primary"><i class="fas fa-print"></i> Imprimir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2025 TechService - Sistema de Gestión de Servicio Técnico</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
