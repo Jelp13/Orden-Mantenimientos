@@ -178,6 +178,13 @@
                                 <!-- Contenido dinámico -->
                             </tbody>
                         </table>
+
+                          <!-- Total general de todas las cuentas -->
+                        <div class="total-section">
+                            <h3>Total General del Sistema</h3>
+                            <div class="total-value" id="total-general">$0</div>
+                            <p>Total acumulado de todos los mantenimientos y componentes</p>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -197,15 +204,12 @@
                     </div>
                     <div class="card">
                         <header class="card-header">
-                            <h2>Tipos de Equipos</h2>
+                            <h2>Ingresos por Mes</h2>
                         </header>
                         <div class="card-body">
-                            <ul class="stats-list" id="tipos-stats">
+                            <ul class="stats-list" id="ingresos-stats">
                                 <!-- Contenido dinámico -->
                             </ul>
-                            <div id="chart-container" class="chart-container">
-                                <!-- Gráfico se generará con JS -->
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -406,6 +410,20 @@
                                 </div>
                             </div>
                         </div>
+
+                            <!-- Sección de componentes comprados -->
+                        <div class="form-section">
+                            <h3>Componentes Comprados</h3>
+                            <div class="componentes-section">
+                                <div id="componentes-comprados">
+                                    <!-- Los componentes se agregarán dinámicamente aquí -->
+                                </div>
+                                <button type="button" id="btn-agregar-componente" class="btn-add-componente">
+                                    <i class="fas fa-plus"></i> Agregar Componente
+                                </button>
+                            </div>
+                        </div>
+
                     </div>
                     
                     <!-- Pestaña: Verificaciones -->
@@ -545,6 +563,37 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        <!-- Sección de valor total del mantenimiento -->
+                        <div class="form-section">
+                            <h3>Valor del Mantenimiento</h3>
+                            
+                            <div class="form-row two-cols">
+                                <div class="form-group">
+                                    <label for="valorMantenimiento">Valor del mantenimiento</label>
+                                    <input type="number" id="valorMantenimiento" name="valorMantenimiento" placeholder="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="metodoPagoFinal">Método de pago final</label>
+                                    <select id="metodoPagoFinal" name="metodoPagoFinal">
+                                        <option value="">Seleccionar</option>
+                                        <option value="Efectivo">Efectivo</option>
+                                        <option value="Tarjeta">Tarjeta débito/crédito</option>
+                                        <option value="Transferencia">Transferencia bancaria</option>
+                                        <option value="Nequi">Nequi</option>
+                                        <option value="Daviplata">Daviplata</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="fechaPagoFinal">Fecha de pago final</label>
+                                    <input type="date" id="fechaPagoFinal" name="fechaPagoFinal">
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                     
                     <!-- Pestaña: Fotos -->
@@ -646,6 +695,72 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal de entrega -->
+    <div id="modal-entrega" class="modal">
+        <div class="modal-content modal-md">
+            <header class="modal-header">
+                <h2>Registrar Entrega</h2>
+                <button class="btn-close entrega-close">&times;</button>
+            </header>
+            <div class="modal-body">
+                <form id="entrega-form">
+                    <input type="hidden" id="entrega-equipo-id">
+                    
+                    <div class="form-section">
+                        <h3>Información del Equipo</h3>
+                        <div id="info-equipo-entrega">
+                            <!-- Se llenará dinámicamente -->
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3>Valor Final a Pagar</h3>
+                        
+                        <div class="form-row two-cols">
+                            <div class="form-group">
+                                <label for="valorFinalMantenimiento">Valor del mantenimiento</label>
+                                <input type="number" id="valorFinalMantenimiento" name="valorFinalMantenimiento" placeholder="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="metodoPagoEntrega">Método de pago</label>
+                                <select id="metodoPagoEntrega" name="metodoPagoEntrega" required>
+                                    <option value="">Seleccionar</option>
+                                    <option value="Efectivo">Efectivo</option>
+                                    <option value="Tarjeta">Tarjeta débito/crédito</option>
+                                    <option value="Transferencia">Transferencia bancaria</option>
+                                    <option value="Nequi">Nequi</option>
+                                    <option value="Daviplata">Daviplata</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fechaEntrega">Fecha de entrega</label>
+                                <input type="date" id="fechaEntrega" name="fechaEntrega" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Resumen de pagos:</label>
+                                <div id="resumen-pagos" style="padding: 10px; background-color: var(--bg-light); border-radius: 4px;">
+                                    <!-- Se llenará dinámicamente -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary entrega-close">Cancelar</button>
+                        <button type="submit" class="btn-primary">Registrar Entrega</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Footer -->
     <footer class="main-footer">
